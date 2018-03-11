@@ -1,0 +1,54 @@
+#Author: mlodydeziom
+#Version: 1.0 
+#Description: Kryptowaluty w świecie Minecraft
+#---configi 
+variables: 
+	{mnoznik::%player%} = 0.00  
+	{wykopane::kryptowaluty::%player%} = 0.00
+#--koniec configu
+
+	
+on first join: 
+	set {mnoznik::%player%} to 0.00
+	set {wykopane::%player%} to 0.00 
+
+
+command /kryptowaluty: 
+	trigger: 
+		wait 5 tick
+		open chest with 1 rows named "Kryptowaluty" to player
+		format slot 0 of player with 1 of diamond named "&aStan kryptowalut" with lore "&8Ilość wykopanych kryptowalut: %{wykopane::%player%}% ||&8Mnożnik kryptowalut: %{mnoznik::%player%}%" to close then run ""
+	
+	
+	
+	#-----------Resetowanie-------
+command /rcrypto [<player>]:
+	permission: crypto.reset
+	permission message: &c* Brak permisji.
+	trigger: 
+		if arg 1 is not set: 
+			send "&4* Nie udało się zresetować stanu kryptowalut gdyż nie został wpisany żaden argument"
+		if arg is set: 
+			send "&a&l[Kryptowaluty]&f&lStan gracza: %arg 1% udało się zresetować"
+			set {mnoznik::%arg 1%} to 0.00 
+			set {wykopane::%player%} to 0.00
+			send "&a&l[Kryptowaluty]&f&lAktualny stan gracza %arg 1% %nl%Mnożnik kryptowalut: %{mnoznik::%arg 1%}%%nl%Wykopane kryptowaluty: %{wykopane::kryptowaluty::%arg 1%}%"
+			
+		#----Koniec resetowania------- 
+	#----Kod główny--------
+on break stone: 
+	chance of 25%: 
+		add 0.10 to {mnoznik::%player%}
+		send "&a&l[Kryptowaluty]&f&lDo twojego mnożnika zostało dodane 0.10" 
+        add {mnoznik::%player%} * 0.05 to {wykopane::%player%}
+		stop 
+	chance of 1%: 
+		add 1.00 to {mnoznik::%player%} 
+		send "&a&l[Kryptowaluty]&f&lDo twojego mnożnika zostało dodane 1.00" 
+        add {mnoznik::%player%} * 0.05 to {wykopane::%player%}
+		stop 
+	chance of 100%: 
+		add 0.01 to {mnoznik::%player%} 
+		send "&a&l[Kryptowaluty]&f&lDo twojego mnożnika zostało dodane 0.01"
+		add {mnoznik::%player%} * 0.05 to {wykopane::%player%}
+	#---Koniec kodu---
